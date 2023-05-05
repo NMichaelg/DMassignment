@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  my-workspace:
+    build: .
+    volumes:
+      - .:/app
+    stdin_open: true 
+    tty: true
