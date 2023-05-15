@@ -12,9 +12,6 @@ int precedence(string ch) {
 }
 // Function to convert infix expression to postfix expression
 string Infix2Postfix(string infix) {
-    if (infix.find(" ")){
-        return "bitch";
-    }
   stack<string> stk;
 
   // Create a string to store postfix expression
@@ -81,14 +78,9 @@ vector<string> splitExpression(string expression) {
     vector<string> tokens;
     string currentToken = "";
 
-    for (int i = 0; i < expression.length(); i++) {
+    for (unsigned int i = 0; i < expression.length(); i++) {
         string c ;
         c += expression[i];
-
-        // If the character is a space, skip it
-        if (isspace(c[0])) {
-            continue;
-        }
 
         // If the character is a digit or a decimal point, add it to the current token
         if (isdigit(c[0])) {
@@ -131,48 +123,63 @@ string Infix2Prefix(string infix) {
             arrs[i] = "(";
         }
     }
-    stack<string> st;
-    string result;
-    for (unsigned int i = 0; i < arrs.size(); i++) {
-        string c = arrs[i];
-  
-        // If the scanned character is
-        // an operand, add it to output string.
-        if (isdigit(c[0])){
-            result += c;
-            result += ' ';
-        } 
+    arrs.push_back(")");
+    arrs.insert(arrs.begin(),"(");
+    int l = arrs.size();
+    stack<string> char_stack;
+    vector<string> output;
+ 
+    for (int i = 0; i < l; i++) {
+ 
+        // If the scanned character is an
+        // operand, add it to output.
+        if (isdigit(arrs[i][0])){
+            output.push_back(arrs[i]);
+            output.push_back(" ");
+        }
         // If the scanned character is an
         // ‘(‘, push it to the stack.
-        else if (c == "(")
-            st.push("(");
-  
-        // If the scanned character is an ‘)’,
-        // pop and add to output string from the stack
+        else if (arrs[i] == "(")
+            char_stack.push("(");
+ 
+        // If the scanned character is an
+        // ‘)’, pop and output from the stack
         // until an ‘(‘ is encountered.
-        else if (c == ")") {
-            while (st.top() != "(") {
-                result += st.top();
-                st.pop();
+        else if (arrs[i] == ")") {
+            while (char_stack.top() != "(") {
+                output.push_back(char_stack.top());
+                output.push_back(" ");
+                char_stack.pop();
             }
-            st.pop();
+ 
+            // Remove '(' from the stack
+            char_stack.pop();
         }
-  
-        // If an operator is scanned
+ 
+        // Operator found
         else {
-            while (!st.empty()
-                   && precedence(arrs[i]) <= precedence(st.top())) {
-                result += st.top();
-                st.pop();
+            while (
+                precedence(arrs[i])
+                < precedence(char_stack.top())) {
+                output.push_back(char_stack.top());
+                output.push_back(" ");
+                char_stack.pop();
             }
-            st.push(c);
-        }
+
+                // Push current Operator on stack
+                char_stack.push(arrs[i]);
+            }
     }
-  
-    // Pop all the remaining elements from the stack
-    while (!st.empty()) {
-        result += st.top();
-        st.pop();
+    while (!char_stack.empty()) {
+        output.push_back(char_stack.top());
+        output.push_back(" ");
+        char_stack.pop();
+    }
+    output.pop_back();
+    reverse(output.begin(),output.end());
+    string result = "";
+    for (unsigned int i = 0 ; i < output.size();i++){
+        result += output[i];
     }
     return result;
 }
