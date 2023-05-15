@@ -140,6 +140,7 @@ string Infix2Prefix(string infix) {
         // an operand, add it to output string.
         if (isdigit(c[0])){
             result += c;
+            result += ' ';
         } 
         // If the scanned character is an
         // ‘(‘, push it to the stack.
