@@ -14,8 +14,8 @@ int main(){
     cout<<PostfixPrefixCalculator("8 4 / 9 3 - +")<<endl;
     cout<<PostfixPrefixCalculator("+ / 8 4 - 9 3")<<endl;
 
-    cout<<PostfixPrefixCalculator("20 2 ^")<<endl;
-    cout<<PostfixPrefixCalculator("^ 20 2")<<endl;
+    // cout<<PostfixPrefixCalculator("20 2 ^")<<endl;
+    // cout<<PostfixPrefixCalculator("^ 20 2")<<endl;
 
     cout<<PostfixPrefixCalculator("3 4 + 5 2 - * 6 1 + /")<<endl;
     cout<<PostfixPrefixCalculator("/ * + 3 4 - 5 2 + 6 1")<<endl;

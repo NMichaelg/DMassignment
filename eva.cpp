@@ -212,8 +212,15 @@ string PostfixPrefixCalculator(string input){
     vector<string> arrs = splitfix(input);
     stack<string> num_stack;
     vector<string> output;
+    stringstream s;
+    s.precision(50);
     if (isdigit(arrs[0][0])){
         for (unsigned int i = 0; i<arrs.size(); i++){
+            if(i == arrs.size() - 1){
+                s.precision(11);
+            }
+            s.str("");
+            string topstk =num_stack.empty()? "" :num_stack.top() ;
             if (isdigit(arrs[i][0])){
                 num_stack.push(arrs[i]);
             }else{
@@ -223,67 +230,102 @@ string PostfixPrefixCalculator(string input){
                 num_stack.pop();
                 string typ = "int";
                 if (num1str.find('.') != string::npos || num2str.find('.') != string::npos){
-                    typ = "float";
+                    typ = "double";
                 }
                 if (arrs[i] == "+"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         int result = num1+num2;
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1+num2;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1+num2;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }
                 }else if(arrs[i] == "-"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         int result = num2-num1;
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num2-num1;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num2-num1;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }
                 }else if(arrs[i] == "*"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         int result = num1*num2;
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1*num2;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1*num2;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = to_string(result);
+                        string re_str1 = s.str();
+                        num_stack.push(s.str());
                     }
                 }else if(arrs[i] == "/"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         if (num2 % num1 !=0){
-                            float num1 = stof(num1str);
-                            float num2 = stof(num2str);
-                            float result = num2/num1;
-                            
-                            num_stack.push(to_string(result));
+                            long double n1 = stold(num1str);
+                            long double n2 = stold(num2str);
+                            long double result = n2/n1;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                            s<<result;
+                            string re_str = s.str();
+                            num_stack.push(re_str);
                         }else{
                             int result = num2/num1;
-                            num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                            s<<result;
+                            num_stack.push(s.str());
                         }
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num2/num1;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num2/num1;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }
                 }else if(arrs[i] == "^"){
                     if (typ == "int"){
@@ -293,15 +335,25 @@ string PostfixPrefixCalculator(string input){
                         for (int i = 1; i<num1; i++){
                             result = result*num2;
                         }
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num2;
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num2;
                         for (int i = 1; i<num1; i++){
                             result = result*num2;
                         }
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }
                 }
             }
@@ -310,6 +362,11 @@ string PostfixPrefixCalculator(string input){
     }else{
         reverse(arrs.begin(),arrs.end());        
         for (unsigned int i = 0; i<arrs.size(); i++){
+            if(i == arrs.size() - 1){
+                s.precision(11);
+            }
+            s.str("");
+            string topstk =num_stack.empty()? "" :num_stack.top() ;
             if (isdigit(arrs[i][0])){
                 num_stack.push(arrs[i]);
             }else{
@@ -319,67 +376,102 @@ string PostfixPrefixCalculator(string input){
                 num_stack.pop();
                 string typ = "int";
                 if (num1str.find('.') != string::npos || num2str.find('.') != string::npos){
-                    typ = "float";
+                    typ = "double";
                 }
                 if (arrs[i] == "+"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         int result = num1+num2;
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string res_str = s.str();
+                        num_stack.push(s.str());
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1+num2;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1+num2;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }
                 }else if(arrs[i] == "-"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         int result = num1-num2;
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1-num2;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1-num2;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }
                 }else if(arrs[i] == "*"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         int result = num1*num2;
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        num_stack.push(s.str());
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1*num2;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1*num2;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }
                 }else if(arrs[i] == "/"){
                     if (typ == "int"){
                         int num1 = stoi(num1str);
                         int num2 = stoi(num2str);
                         if (num1 % num2 !=0){
-                            float num1f = stof(num1str);
-                            float num2f = stof(num2str);
-                            float result = num1f/num2f;
-                            
-                            num_stack.push(to_string(result));
+                            long double num1f = stold(num1str);
+                            long double num2f = stold(num2str);
+                            long double result = num1f/num2f;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                            s<<result;
+                            string re_str = s.str();
+                            num_stack.push(re_str);
                         }else{
                             int result = num1/num2;
-                            num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                            s<<result;
+                            num_stack.push(s.str());
                         }
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1/num2;
-                        
-                        num_stack.push(to_string(result));
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1/num2;
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }
                 }else if(arrs[i] == "^"){                    
                     if (typ == "int"){
@@ -389,15 +481,25 @@ string PostfixPrefixCalculator(string input){
                         for (int i = 1; i<num2; i++){
                             result = result*num1;
                         }
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }else{
-                        float num1 = stof(num1str);
-                        float num2 = stof(num2str);
-                        float result = num1;
+                        long double num1 = stold(num1str);
+                        long double num2 = stold(num2str);
+                        long double result = num1;
                         for (int i = 1; i<num2; i++){
                             result = result*num1;
                         }
-                        num_stack.push(to_string(result));
+                        if(i == arrs.size() - 1){
+                            result = round(result * 10000) / 10000;
+                        }
+                        s<<result;
+                        string re_str = s.str();
+                        num_stack.push(re_str);
                     }
                 }
             }

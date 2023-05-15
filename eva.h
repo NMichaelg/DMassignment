@@ -5,7 +5,8 @@
 #include <stack>
 #include <algorithm>
 #include <vector>
-#include <iomanip>
+#include <math.h>
+#include <sstream>
 #include <iostream>
 using namespace std;
 string Infix2Postfix(string infix);
