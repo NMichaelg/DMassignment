@@ -1,4 +1,5 @@
 #include "eva.h"
+//SUPPORT FUNCTION
 int precedence(string ch) {
     if (ch == "+" || ch == "-") {
     return 1;
@@ -10,7 +11,68 @@ int precedence(string ch) {
     return 0;
     }
 }
-// Function to convert infix expression to postfix expression
+
+vector<string> splitExpression(string expression) {
+    vector<string> tokens;
+    string currentToken = "";
+
+    for (unsigned int i = 0; i < expression.length(); i++) {
+        string c ;
+        c += expression[i];
+
+        // If the character is a digit or a decimal point, add it to the current token
+        if (isdigit(c[0])) {
+            currentToken += c;
+            for (i = i+1; i<expression.length();i++){
+                if(!isdigit(expression[i])){
+                    i = i-1;
+                    break;
+                }else{
+                    currentToken += expression[i];
+                }
+            }
+            // If the current token is the only token in the vector or the previous character was not a digit,
+            // add the current token to the vector and reset the current token
+            tokens.push_back(currentToken);
+            currentToken = "";
+        }
+        // If the character is a symbol, add it to the vector as a separate token
+        else {
+            tokens.push_back(c);
+        }
+    }
+
+    // Add the last token to the vector if it exists
+    if (!currentToken.empty()) {
+        tokens.push_back(currentToken);
+    }
+
+    return tokens;
+}
+
+vector<string> splitfix(string input){
+    vector<std::string> result;
+    string temp = "";
+
+    for (int i = 0; i < input.size(); i++) {
+        if (input[i] == ' ') {
+            result.push_back(temp);
+            temp = "";
+        }
+        else {
+            temp += input[i];
+        }
+    }
+
+    if (temp.size() > 0) {
+        result.push_back(temp);
+    }
+
+    return result;
+}
+//END OF SUPPORT FUNCTION
+
+
 string Infix2Postfix(string infix) {
   stack<string> stk;
 
@@ -72,44 +134,6 @@ string Infix2Postfix(string infix) {
   postfix.pop_back();
 
   return postfix;
-}
-// Function to conver infix to prefix
-vector<string> splitExpression(string expression) {
-    vector<string> tokens;
-    string currentToken = "";
-
-    for (unsigned int i = 0; i < expression.length(); i++) {
-        string c ;
-        c += expression[i];
-
-        // If the character is a digit or a decimal point, add it to the current token
-        if (isdigit(c[0])) {
-            currentToken += c;
-            for (i = i+1; i<expression.length();i++){
-                if(!isdigit(expression[i])){
-                    i = i-1;
-                    break;
-                }else{
-                    currentToken += expression[i];
-                }
-            }
-            // If the current token is the only token in the vector or the previous character was not a digit,
-            // add the current token to the vector and reset the current token
-            tokens.push_back(currentToken);
-            currentToken = "";
-        }
-        // If the character is a symbol, add it to the vector as a separate token
-        else {
-            tokens.push_back(c);
-        }
-    }
-
-    // Add the last token to the vector if it exists
-    if (!currentToken.empty()) {
-        tokens.push_back(currentToken);
-    }
-
-    return tokens;
 }
 
 string Infix2Prefix(string infix) {
@@ -182,4 +206,203 @@ string Infix2Prefix(string infix) {
         result += output[i];
     }
     return result;
+}
+
+string PostfixPrefixCalculator(string input){
+    vector<string> arrs = splitfix(input);
+    stack<string> num_stack;
+    vector<string> output;
+    if (isdigit(arrs[0][0])){
+        for (unsigned int i = 0; i<arrs.size(); i++){
+            if (isdigit(arrs[i][0])){
+                num_stack.push(arrs[i]);
+            }else{
+                string num1str = num_stack.top();
+                num_stack.pop();
+                string num2str = num_stack.top();
+                num_stack.pop();
+                string typ = "int";
+                if (num1str.find('.') != string::npos || num2str.find('.') != string::npos){
+                    typ = "float";
+                }
+                if (arrs[i] == "+"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num1+num2;
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1+num2;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "-"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num2-num1;
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num2-num1;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "*"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num1*num2;
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1*num2;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "/"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        if (num2 % num1 !=0){
+                            float num1 = stof(num1str);
+                            float num2 = stof(num2str);
+                            float result = num2/num1;
+                            
+                            num_stack.push(to_string(result));
+                        }else{
+                            int result = num2/num1;
+                            num_stack.push(to_string(result));
+                        }
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num2/num1;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "^"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num2;
+                        for (int i = 1; i<num1; i++){
+                            result = result*num2;
+                        }
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num2;
+                        for (int i = 1; i<num1; i++){
+                            result = result*num2;
+                        }
+                        num_stack.push(to_string(result));
+                    }
+                }
+            }
+        }
+        return num_stack.top();
+    }else{
+        reverse(arrs.begin(),arrs.end());        
+        for (unsigned int i = 0; i<arrs.size(); i++){
+            if (isdigit(arrs[i][0])){
+                num_stack.push(arrs[i]);
+            }else{
+                string num1str = num_stack.top();
+                num_stack.pop();
+                string num2str = num_stack.top();
+                num_stack.pop();
+                string typ = "int";
+                if (num1str.find('.') != string::npos || num2str.find('.') != string::npos){
+                    typ = "float";
+                }
+                if (arrs[i] == "+"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num1+num2;
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1+num2;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "-"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num1-num2;
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1-num2;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "*"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num1*num2;
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1*num2;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "/"){
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        if (num1 % num2 !=0){
+                            float num1f = stof(num1str);
+                            float num2f = stof(num2str);
+                            float result = num1f/num2f;
+                            
+                            num_stack.push(to_string(result));
+                        }else{
+                            int result = num1/num2;
+                            num_stack.push(to_string(result));
+                        }
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1/num2;
+                        
+                        num_stack.push(to_string(result));
+                    }
+                }else if(arrs[i] == "^"){                    
+                    if (typ == "int"){
+                        int num1 = stoi(num1str);
+                        int num2 = stoi(num2str);
+                        int result = num1;
+                        for (int i = 1; i<num2; i++){
+                            result = result*num1;
+                        }
+                        num_stack.push(to_string(result));
+                    }else{
+                        float num1 = stof(num1str);
+                        float num2 = stof(num2str);
+                        float result = num1;
+                        for (int i = 1; i<num2; i++){
+                            result = result*num1;
+                        }
+                        num_stack.push(to_string(result));
+                    }
+                }
+            }
+        }
+        return num_stack.top();
+    }
+    return "hi";
 }
