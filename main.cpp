@@ -29,6 +29,28 @@ void logic_test(){
     cout<<LogicInfix2Prefix("(p&~q)|r")<<endl;
     cout<<LogicInfix2Prefix("(p|~q)&r")<<endl;
     cout<<LogicInfix2Prefix("~t->t&~w|(z&(p&(w&(p|p&q)|y&z&z)<->x&(~p|z)&~y))")<<endl;
+
+    cout<<LogicPostfixPrefixCalculator("ab&","a b 1 0")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("&ab","a b 1 0")<<endl; //FASLE
+    cout<<LogicPostfixPrefixCalculator("ab&a|","a b 1 0")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("|&aba","a b 1 0")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("pq&","p q 0 1")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("&pq","p q 0 1")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("p~","p 1")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("~p","p 1")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("pq|","p q 1 0")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("|pq","p q 1 0")<<endl; //TRUE 
+    cout<<LogicPostfixPrefixCalculator("rpq&|","p q r 1 0 1")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("|r&pq","p q r 1 0 1")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("pq&~","p q 1 1")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("~&pq","p q 1 1")<<endl; //FALSE
+    cout<<LogicPostfixPrefixCalculator("pq~&r|","p q r 1 0 0")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("|&p~qr","p q r 1 0 0")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("pq~|r&","p q r 0 0 1")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("&|p~qr","p q r 0 0 1")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("t~tw~&zpwpp|q&&y|z&z&&xp~z|&y~&<->&|->","t w z p q y x 1 1 1 1 1 1 1")<<endl; //TRUE
+    cout<<LogicPostfixPrefixCalculator("->~t|&t~w&z<->&p&&|&w&|ppqyzz&&x|~pz~y","t w z p q y x 1 1 1 1 1 1 1")<<endl; //TRUE
+
 }
 void arth_test(){
     //cout<<Infix2Postfix("(3+4)*(5-2)/(6+1)")<<endl;
