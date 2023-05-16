@@ -1,5 +1,11 @@
 #include "eva.h"
 //SUPPORT FUNCTION
+int isOperator(string ch)
+{
+    return (ch == "+" || ch == "-" || ch == "*" || ch == "/"
+            || ch == "^");
+}
+
 int precedence(string ch) {
     if (ch == "+" || ch == "-") {
     return 1;
@@ -11,7 +17,73 @@ int precedence(string ch) {
     return 0;
     }
 }
+int logic_precedence(string ch){
+    if (ch == "<->") {
+        return 1;
+    } else if (ch == "->") {
+        return 2;
+    } else if (ch == "|") {
+        return 3;
+    } else if (ch== "&") {
+        return 4;
+    } else if (ch=="~"){
+        return 5;
+    }    
+    else {
+        return 0;
+    }
+}
+vector<string> split_logic(string expression) {
+    vector<string> tokens;
+    stringstream ss(expression);
+    string token ;
+    while (getline(ss, token, ' ')) {
+        if(isalpha(token[0])){
+            tokens.push_back(token.substr(0,1));
+            token = token.substr(1);
+        }
+        std::size_t found = token.find_first_of("&|-><->()~");
+        while (found != std::string::npos) {
+            if (isalpha(token[0])){
+                tokens.push_back(token.substr(0,1));
+                token = token.substr(1);
+                found = token.find_first_of("&|-><->()~");
+            }
+            if(token[found] == '&' || token[found] == '|' || token[found] == '-' || token[found] == '<' || token[found] == '(' || token[found] == ')'){
+                if(token[found] == '-'){
+                    tokens.push_back(token.substr(found,2));
+                    tokens.push_back(token.substr(found+2, 1));
+                    token = token.substr(found + 3);
+                }else if (token[found] == '<'){
+                    tokens.push_back(token.substr(found,3));
+                    tokens.push_back(token.substr(found+3, 1));
+                    token = token.substr(found + 4);
+                }else if (token[found] == '(' || token[found] == ')'){
+                    tokens.push_back(token.substr(found,1));
+                    token = token.substr(found + 1);
+                }
+                else{
+                    tokens.push_back(token.substr(found,1));
+                    tokens.push_back(token.substr(found+1, 1));            
+                    // foundarr[0] = token.find("&");
+                    // foundarr[1] = token.find("|");
+                    // foundarr[2] = token.find("->");
+                    // foundarr[3] = token.find("<->");
+                    token = token.substr(found + 2);
+                }
+            }else if (token[found] == '~'){
+                tokens.push_back(token.substr(found,1));
+                tokens.push_back(token.substr(found+1,1));
+                token = token.substr(found + 2);
+            }else{
+                //TO DO EXCEPTION
+            }
+            found = token.find_first_of("&|~-><->()");
+        }
+    }
 
+    return tokens;
+}
 vector<string> splitExpression(string expression) {
     vector<string> tokens;
     string currentToken = "";
@@ -21,7 +93,12 @@ vector<string> splitExpression(string expression) {
         c += expression[i];
 
         // If the character is a digit or a decimal point, add it to the current token
-        if (isdigit(c[0])) {
+        if (isalpha (c[0])){
+            currentToken += c;
+            tokens.push_back(currentToken);
+            currentToken = "";
+        }
+        else if (isdigit(c[0])) {
             currentToken += c;
             for (i = i+1; i<expression.length();i++){
                 if(!isdigit(expression[i])){
@@ -37,8 +114,10 @@ vector<string> splitExpression(string expression) {
             currentToken = "";
         }
         // If the character is a symbol, add it to the vector as a separate token
-        else {
+        else if (c == "(" || c == ")" || isOperator(c)) {
             tokens.push_back(c);
+        }else{
+            
         }
     }
 
@@ -505,6 +584,38 @@ string PostfixPrefixCalculator(string input){
             }
         }
         return num_stack.top();
+    }
+    return "hi";
+}
+
+string LogicInfix2Postfix(string infix){
+    vector<string> input = split_logic(infix);
+    for (unsigned int i = 0; i<input.size();i++){
+        cout<<input[i]<<" ";
+    }
+    cout<<endl;
+    string postfix = "";
+    stack<string> stk ;
+    for (unsigned int i = 0 ; i<input.size();i++){
+        if(isalpha(input[i][0])){
+            postfix += input[i];
+        }else if (input[i] == "("){
+            stk.push(input[i]);
+        }else if (input[i] == ")"){
+            while (!stk.empty() && stk.top() != "(") {
+                postfix += stk.top();
+                postfix += ' ';
+                stk.pop();
+            }
+            stk.pop(); 
+        }else{
+            while (!stk.empty() && logic_precedence(input[i]) <= logic_precedence(stk.top())) {
+                postfix += stk.top();
+                postfix += ' ';
+                stk.pop();
+            }
+            stk.push(input[i]);
+        }
     }
     return "hi";
 }
