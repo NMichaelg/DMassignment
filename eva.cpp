@@ -6,8 +6,8 @@ int isOperator(string ch)
             || ch == "^");
 }
 int isLogicoperator(string ch){
-    return (ch == "&" || ch == "|" || ch == "->" || ch == "~"
-        || ch == "<->");
+
+    return (ch == "&" || ch == "|" || ch == "->" || ch == "~" || ch == "<->");
 }
 
 int precedence(string ch) {
@@ -151,6 +151,26 @@ vector<string> splitfix(string input){
         result.push_back(temp);
     }
 
+    return result;
+}
+vector<string> splitlogicfix(const string& input){
+    vector<std::string> result;
+    for (unsigned int i = 0; i < input.size(); i++) {
+        if (isalpha(input[i])) {
+            result.push_back(input.substr(i,1));
+        }
+        else {
+            if(input[i] == '-'){
+                result.push_back(input.substr(i,2));
+                i++;
+            }else if (input[i] == '<'){
+                result.push_back(input.substr(i,3));
+                i += 2;
+            }else{
+                result.push_back(input.substr(i,1));
+            }
+        }
+    }
     return result;
 }
 //END OF SUPPORT FUNCTION
@@ -679,4 +699,145 @@ string LogicInfix2Prefix(string infix){
         result += output[i];
     }
     return result;
+}
+struct data{
+    string name;
+    bool value;
+};
+string LogicPostfixPrefixCalculator(string input,string varlue){
+    vector<data> datalist ;
+    unsigned int y = varlue.find_first_of("01");
+    unsigned int i = 0;
+    while(y < varlue.size()){
+        if(varlue[y] == ' '){
+            y++;
+            i++;
+        }else{
+            data inpdata;
+            inpdata.name = varlue.substr(i,1);
+            inpdata.value = (varlue[y] == '1')? true:false;
+            datalist.push_back(inpdata);
+            y++;
+            i++;
+        }
+    }
+    //vector<string> inp = splitlogicfix(input);
+    vector<string> inp;
+    inp = splitlogicfix(input);
+    stack<bool>stk;
+    if (isalpha(inp[0][0])){
+        //postfix
+        for(i = 0; i<inp.size();i++){
+            if(isalpha(inp[i][0])){
+                bool to_push ;
+                for (int j = 0;j<datalist.size();j++){
+                    if(datalist[j].name == inp[i].substr(0,1)){
+                        to_push = datalist[j].value;
+                        break;
+                    }
+                    if (j == datalist.size()-1){
+                        //TO DO exception
+                    }
+                }
+                stk.push(to_push);
+
+            }else if (isLogicoperator(inp[i])){
+                if (inp[i] == "~") {
+                    bool to_push = !stk.top();
+                    stk.pop();
+                    stk.push(to_push);
+                }else if (inp[i] == "&") {
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = val1 && val2;
+                    stk.push(to_push);
+                }else if(inp[i] == "|"){
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = val1 || val2;
+                    stk.push(to_push);
+                }else if (inp[i] == "->"){
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = !val2 || val1;
+                    stk.push(to_push);
+                }else if (inp[i] == "<->"){
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = (!val2 || val1) && (!val1 || val2) ;
+                    stk.push(to_push);
+                }
+            }else{
+                //TO DO exception
+            }
+        }
+    }else if (isLogicoperator(inp[0])){
+        //prefix
+        reverse(inp.begin(),inp.end());
+        for(i = 0; i<inp.size();i++){
+            if(isalpha(inp[i][0])){
+                bool to_push ;
+                for (int j = 0;j<datalist.size();j++){
+                    if(datalist[j].name == inp[i].substr(0,1)){
+                        to_push = datalist[j].value;
+                        break;
+                    }
+                    if (j == datalist.size()-1){
+                        //TO DO exception
+                    }
+                }
+                stk.push(to_push);
+
+            }else if (isLogicoperator(inp[i])){
+                if (inp[i] == "~") {
+                    bool to_push = !stk.top();
+                    stk.pop();
+                    stk.push(to_push);
+                }else if (inp[i] == "&") {
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = val1 && val2;
+                    stk.push(to_push);
+                }else if(inp[i] == "|"){
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = val1 || val2;
+                    stk.push(to_push);
+                }else if (inp[i] == "->"){
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = !val2 || val1;
+                    stk.push(to_push);
+                }else if (inp[i] == "<->"){
+                    bool val1 = stk.top();
+                    stk.pop();
+                    bool val2 = stk.top();
+                    stk.pop();
+                    bool to_push = (!val2 || val1) && (!val1 || val2) ;
+                    stk.push(to_push);
+                }
+            }else{
+                //TO DO exception
+                int a = 0;
+            }
+        }
+    }else{
+        // TO DO exception
+        int a = 0;
+    }
+    return stk.top() ? "TRUE":"FALSE";
 }

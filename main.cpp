@@ -3,7 +3,7 @@
 void logic_test();
 void arth_test();
 int main(){
-    //arth_test();
+    arth_test();
     logic_test();
     return 0;
 }
@@ -19,16 +19,18 @@ void logic_test(){
     // cout<<LogicInfix2Postfix("(p|~q)&r")<<endl;
     // cout<<LogicInfix2Postfix("~t->t&~w|(z&(p&(w&(p|p&q)|y&z&z)<->x&(~p|z)&~y))")<<endl;
 
-    cout<<LogicInfix2Prefix("a&b")<<endl;
-    cout<<LogicInfix2Prefix("a&b|a")<<endl;
-    cout<<LogicInfix2Prefix("p&q")<<endl;
-    cout<<LogicInfix2Prefix("~p")<<endl;
-    cout<<LogicInfix2Prefix("p|q")<<endl;
-    cout<<LogicInfix2Prefix("r|(p&q)")<<endl;
-    cout<<LogicInfix2Prefix("~(p&q)")<<endl;
-    cout<<LogicInfix2Prefix("(p&~q)|r")<<endl;
-    cout<<LogicInfix2Prefix("(p|~q)&r")<<endl;
-    cout<<LogicInfix2Prefix("~t->t&~w|(z&(p&(w&(p|p&q)|y&z&z)<->x&(~p|z)&~y))")<<endl;
+    // cout<<LogicInfix2Prefix("a&b")<<endl;
+    // cout<<LogicInfix2Prefix("a&b|a")<<endl;
+    // cout<<LogicInfix2Prefix("p&q")<<endl;
+    // cout<<LogicInfix2Prefix("~p")<<endl;
+    // cout<<LogicInfix2Prefix("p|q")<<endl;
+    // cout<<LogicInfix2Prefix("r|(p&q)")<<endl;
+    // cout<<LogicInfix2Prefix("~(p&q)")<<endl;
+    // cout<<LogicInfix2Prefix("(p&~q)|r")<<endl;
+    // cout<<LogicInfix2Prefix("(p|~q)&r")<<endl;
+    // cout<<LogicInfix2Prefix("~t->t&~w|(z&(p&(w&(p|p&q)|y&z&z)<->x&(~p|z)&~y))")<<endl;
+
+
 
     cout<<LogicPostfixPrefixCalculator("ab&","a b 1 0")<<endl; //FALSE
     cout<<LogicPostfixPrefixCalculator("&ab","a b 1 0")<<endl; //FASLE
