@@ -5,6 +5,10 @@ int isOperator(string ch)
     return (ch == "+" || ch == "-" || ch == "*" || ch == "/"
             || ch == "^");
 }
+int isLogicoperator(string ch){
+    return (ch == "&" || ch == "|" || ch == "->" || ch == "~"
+        || ch == "<->");
+}
 
 int precedence(string ch) {
     if (ch == "+" || ch == "-") {
@@ -260,7 +264,7 @@ string Infix2Prefix(string infix) {
         }
  
         // Operator found
-        else {
+        else if (isOperator(arrs[i])){
             while (
                 precedence(arrs[i])
                 < precedence(char_stack.top())) {
@@ -271,7 +275,9 @@ string Infix2Prefix(string infix) {
 
                 // Push current Operator on stack
                 char_stack.push(arrs[i]);
-            }
+        }else{
+            //TO DO EXCEPTION
+        }
     }
     while (!char_stack.empty()) {
         output.push_back(char_stack.top());
@@ -626,4 +632,51 @@ string LogicInfix2Postfix(string infix){
         postfix.pop_back();
     }
     return postfix;
+}
+
+string LogicInfix2Prefix(string infix){
+    vector<string> input = split_logic(infix);
+    reverse(input.begin(),input.end());
+    for (unsigned int i =0 ; i< input.size();i++){
+        if (input[i] == "(") {
+            input[i] = ")";
+        }
+        else if (input[i] == ")") {
+            input[i] = "(";
+        }
+    }
+    input.push_back(")");
+    input.insert(input.begin(),"(");
+
+    stack<string> stk ;
+    vector<string> output;
+    for (unsigned int i = 0; i<input.size();i++){
+        if(isalpha(input[i][0])){
+            output.push_back(input[i]);
+        }else if (input[i] == "("){
+            stk.push(input[i]);
+        }else if (input[i] == ")"){
+            while(stk.top() != "("){
+                output.push_back(stk.top());
+                stk.pop();
+            }
+            stk.pop();
+        }else if (isLogicoperator(input[i])){
+            while(logic_precedence(input[i]) < logic_precedence(stk.top())){
+                output.push_back(stk.top());
+                stk.pop();
+            }
+            stk.push(input[i]);
+        }
+    }
+    while(!stk.empty()){
+        output.push_back(stk.top());
+        stk.pop();
+    }
+    reverse(output.begin(),output.end());
+    string result = "";
+    for (unsigned int i = 0; i<output.size();i++){
+        result += output[i];
+    }
+    return result;
 }
