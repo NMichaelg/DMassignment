@@ -730,7 +730,7 @@ string LogicPostfixPrefixCalculator(string input,string varlue){
         for(i = 0; i<inp.size();i++){
             if(isalpha(inp[i][0])){
                 bool to_push ;
-                for (int j = 0;j<datalist.size();j++){
+                for (unsigned int j = 0;j<datalist.size();j++){
                     if(datalist[j].name == inp[i].substr(0,1)){
                         to_push = datalist[j].value;
                         break;
@@ -785,7 +785,7 @@ string LogicPostfixPrefixCalculator(string input,string varlue){
         for(i = 0; i<inp.size();i++){
             if(isalpha(inp[i][0])){
                 bool to_push ;
-                for (int j = 0;j<datalist.size();j++){
+                for (unsigned int j = 0;j<datalist.size();j++){
                     if(datalist[j].name == inp[i].substr(0,1)){
                         to_push = datalist[j].value;
                         break;
@@ -832,12 +832,10 @@ string LogicPostfixPrefixCalculator(string input,string varlue){
                 }
             }else{
                 //TO DO exception
-                int a = 0;
             }
         }
     }else{
         // TO DO exception
-        int a = 0;
     }
     return stk.top() ? "TRUE":"FALSE";
 }
