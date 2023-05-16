@@ -23,7 +23,7 @@ int logic_precedence(string ch){
     } else if (ch == "->") {
         return 2;
     } else if (ch == "|") {
-        return 3;
+        return 4;
     } else if (ch== "&") {
         return 4;
     } else if (ch=="~"){
@@ -590,10 +590,10 @@ string PostfixPrefixCalculator(string input){
 
 string LogicInfix2Postfix(string infix){
     vector<string> input = split_logic(infix);
-    for (unsigned int i = 0; i<input.size();i++){
-        cout<<input[i]<<" ";
-    }
-    cout<<endl;
+    // for (unsigned int i = 0; i<input.size();i++){
+    //     cout<<input[i]<<" ";
+    // }
+    // cout<<endl;
     string postfix = "";
     stack<string> stk ;
     for (unsigned int i = 0 ; i<input.size();i++){
@@ -604,18 +604,26 @@ string LogicInfix2Postfix(string infix){
         }else if (input[i] == ")"){
             while (!stk.empty() && stk.top() != "(") {
                 postfix += stk.top();
-                postfix += ' ';
                 stk.pop();
             }
             stk.pop(); 
         }else{
             while (!stk.empty() && logic_precedence(input[i]) <= logic_precedence(stk.top())) {
                 postfix += stk.top();
-                postfix += ' ';
                 stk.pop();
             }
             stk.push(input[i]);
         }
     }
-    return "hi";
+    // While stack is not empty, pop and print operators
+    while (!stk.empty()) {
+        postfix += stk.top();
+        stk.pop();
+    }
+
+    // Remove the trailing space
+    if(postfix[postfix.size()-1] == ' '){
+        postfix.pop_back();
+    }
+    return postfix;
 }

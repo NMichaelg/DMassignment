@@ -8,17 +8,11 @@ int main(){
     return 0;
 }
 void logic_test(){
-    cout<<LogicInfix2Postfix("~a")<<endl;
     cout<<LogicInfix2Postfix("a&b")<<endl;
     cout<<LogicInfix2Postfix("a&b|a")<<endl;
     cout<<LogicInfix2Postfix("p&q")<<endl;
     cout<<LogicInfix2Postfix("~p")<<endl;
     cout<<LogicInfix2Postfix("p|q")<<endl;
-
-    cout<<LogicInfix2Postfix("p->q")<<endl;
-    cout<<LogicInfix2Postfix("p<->q")<<endl;
-
-
     cout<<LogicInfix2Postfix("r|(p&q)")<<endl;
     cout<<LogicInfix2Postfix("~(p&q)")<<endl;
     cout<<LogicInfix2Postfix("(p&~q)|r")<<endl;
